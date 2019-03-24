@@ -26,17 +26,12 @@ import feedparser as fd
 now = datetime.now()
 now_time = now.time()
 
-# 30 second sleep to make sure internet is connected
-#tm.sleep(30)
-
 # Run from start until 4:00PM
 while now_time <= time(16,00):
 
     # Symbol List         
     stockList = pd.read_csv('/Users/dkatz44/Desktop/StockAlerts/StockList.csv')
-    
-      #  print(len(stockList.index))
-    
+       
     chunkSize = len(stockList.index) / 11    
     
     reader = pd.read_table('/Users/dkatz44/Desktop/StockAlerts/StockList.csv', sep=',', chunksize=chunkSize)
@@ -64,15 +59,11 @@ while now_time <= time(16,00):
             
         except requests.exceptions.ConnectionError as e:
             pass
-        # e.args
-        # e.args[0]
-        # dir(e.args[0])
-        # e.args[0].reason
+
         if resp != None:
             jsonResults = resp.json()
-        #resp = requests.get("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20(%22YHOO%22%2C%22AAPL%22%2C%22GOOG%22%2C%22MSFT%22)&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys")        
+ 
         tm.sleep(2)
-        #tm.sleep(2)
         return jsonResults['query']['results']
 
 
@@ -258,8 +249,6 @@ while now_time <= time(16,00):
     now = datetime.now()
     now_time = now.time()
     print("Loop starting:", now_time)
-#    print(now.time())
-#    break
 
 cmd = "osascript<<END\n"
 cmd = cmd + """tell application "Messages" \n"""
@@ -272,100 +261,3 @@ def quit_msgs():
 
 quit_msgs()
 print("Program Ended")
-
-#cmd = """osascript<<END
-#tell application "Messages"
-#   send "test" to buddy "+18609787397" of service "SMS"
-#end tell
-#END"""
-
-#def send_text():
-#     os.system(cmd)
-     
-#send_text()
-
-
-"""
-
-watchList = []
-summaryString = ''
-
-for x in resp.json()['query']['results']['quote']:
-
-    vol = int(x['Volume'])
-    dailyVol = int(x['AverageDailyVolume'])    
-    
-    volDiffPercent = vol / dailyVol    
-
-    percentChange = float(x['PercentChange'].strip('%'))/100
-    
-    if volDiffPercent > 1 and percentChange > 0:
-        
-        symbol = x['symbol']
-#        change = x['Change']
-        percentChange = str("{:0.1%}".format(percentChange))
- #       volume = str(format(vol, ',d'))
- #       averageDailyVolume = str(format(dailyVol, ',d'))
-        volDiffPercentString = str("{:0.0%}".format(volDiffPercent))
-        
-        summaryString = str(symbol + ' ' + percentChange + ' ' + volDiffPercentString + '\n') 
-        
-        watchList.append(summaryString)
-        
-#print("{:0.0%}".format(volChangePercent))  
-#print("{:0.2%}".format(percentChange))    
-#change = resp.json()['query']['results']['quote'][0]['Change']
-#symbol = resp.json()['query']['results']['quote'][0]['symbol']
-  
-      
-# Sort through the data by populating lists for each symbol that meets the 
-# volDiffPercent and percentChange criteria
-    symbolArray = []
-    percentChangeArray = []
-    volDiffPercentArray = []
-
-    for x in resp.json()['query']['results']['quote']:
-        if x['PercentChange'] is not None:
-            vol = int(x['Volume'])
-            dailyVol = int(x['AverageDailyVolume'])    
-    
-            volDiffPercent = vol / dailyVol    
-            
-            percentChange = float(x['PercentChange'].strip('%'))/100
-    
-            if volDiffPercent > 1 and percentChange > 0:
-        
-                symbolArray.append(x['symbol'])
-                percentChangeArray.append(float(x['PercentChange'].strip('%'))/100) # get percentChange as a float
-                volDiffPercentArray.append(round(int(x['Volume']) / int(x['AverageDailyVolume']),2)) # get volDiffPercent as a rounded int (important for sorting)
-
-# Create a DataFrame with symbol, percentChange, and volDiffPercent
-    if len(symbolArray) > 0:
-
-        combinedData = pd.DataFrame(
-        {'symbol' : symbolArray,
-         'percentChange' : percentChangeArray,
-         'volDiffPercent' : volDiffPercentArray
-         })
-
-# Sort by volDiffPercent and percentChange
-        combinedData = combinedData.sort_values(['volDiffPercent', 'percentChange'], ascending=[False, False])
-
-# Reset the index with the new sorted order
-        combinedData = combinedData.reset_index(drop=True)
-
-# Convert percentChange and volDiffPercent into formatted strings
-        combinedData['percentChange'] = combinedData['percentChange'].apply(lambda x: str("{:0.1%}".format(x)))
-        combinedData['volDiffPercent'] = combinedData['volDiffPercent'].apply(lambda x: str("{:0.0%}".format(x)))
-
-# Create a formatted column with all of the data
-        combinedData['combined'] = \
-              combinedData['symbol'] + \
-              ' ' + combinedData['percentChange'] + \
-              ' ' + combinedData['volDiffPercent'] + '\n'
-
-# Create the watchList by getting the combined column from the combinedData DataFrame
-        watchList = combinedData['combined'].tolist()
-  
-      
-"""
