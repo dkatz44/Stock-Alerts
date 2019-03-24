@@ -1,6 +1,6 @@
 # Stock-Alerts
 
-Takes a list of stocks and sends an alert if something interesting is happening based on unusual price/volume changes or trading being suspended.
+Takes a list of stocks and sends an alert if something interesting is happening based on unusual price/volume changes and/or trading being suspended.
 
 1. Scrapes a list of interesting stocks from the Finviz stock screener
 2. Pulls data for each stock from the Yahoo Finance API every few minutes
