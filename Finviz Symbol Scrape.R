@@ -1,4 +1,4 @@
-## Consumer Affairs ##
+## Pulls relevant stock symbols from the Finviz stock screener ##
 
 #initializes empty data frame 
 full_table <- data.frame(Date=as.Date(character()),
